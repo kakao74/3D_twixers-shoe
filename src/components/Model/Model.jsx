@@ -10,7 +10,13 @@ import {
   useState,
 } from "react";
 
-import { Environment, PerspectiveCamera, View } from "@react-three/drei";
+import {
+  AccumulativeShadows,
+  Environment,
+  PerspectiveCamera,
+  RandomizedLight,
+  View,
+} from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -38,7 +44,7 @@ const Model = ({ className }) => {
   const mouse = { x: 0, y: 0 };
 
   let isDragging = false;
-  let prevMousePos = { x: 0, y: 0 };
+  let prevRotation = { x: 0, y: 0 };
 
   useEffect(() => {
     if (canvasContainerRef.current) {
@@ -100,8 +106,8 @@ const Model = ({ className }) => {
     if (!isDragging || !groupRef.current) return;
 
     const deltaMove = {
-      x: prevMousePos.x + startMousPos.x - e.offsetX,
-      y: prevMousePos.y + startMousPos.y - e.offsetY,
+      x: prevRotation.x + (startMousPos.x - e.offsetX) * -1,
+      y: prevRotation.y + (startMousPos.y - e.offsetY) * -1,
     };
 
     setTargetRotation({ x: deltaMove.y, y: deltaMove.x, z: 0 });
@@ -111,8 +117,7 @@ const Model = ({ className }) => {
   function handleMouseUp(e) {
     isDragging = false;
 
-    console.log("targetRotationRef: ", targetRotationRef.current);
-    prevMousePos = {
+    prevRotation = {
       x: targetRotationRef.current.x,
       y: targetRotationRef.current.y,
     };
@@ -168,14 +173,13 @@ const ModelView = forwardRef(({ groupRef, cameraRef }, ref) => {
     <View className={`w-full h-full absolute `}>
       <ambientLight intensity={0.3} />
       <Environment preset="city" />
-      <PerspectiveCamera makeDefault position={[0, 0, 0.8]} ref={cameraRef} />
-      {/* <Lights /> */}
+      <PerspectiveCamera makeDefault position={[0, 0, 1]} ref={cameraRef} />
 
-      {/* <AccumulativeShadows
+      <AccumulativeShadows
         temporal
-        frames={60}
+        frames={30}
         alphaTest={0.85}
-        scale={10}
+        scale={2}
         rotation={[Math.PI / 2, 0, 0]}
         position={[0, 0, -0.3]}
       >
@@ -194,20 +198,13 @@ const ModelView = forwardRef(({ groupRef, cameraRef }, ref) => {
           ambient={0.55}
           position={[-5, 5, 2]}
         />
-      </AccumulativeShadows> */}
+      </AccumulativeShadows>
 
-      <group ref={groupRef} position={[0, 0, 0]}>
+      <group ref={groupRef} position={[0, -0.1, 0]}>
         <Suspense fallback={<Loader />}>
           <ShoeMesh />
         </Suspense>
       </group>
-      {/* <OrbitControls
-        makeDefault
-        enableZoom={true}
-        enablePan={false}
-        rotateSpeed={0.4}
-        target={new THREE.Vector3(0, 0, 0)}
-      /> */}
     </View>
   );
 });

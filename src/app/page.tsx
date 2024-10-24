@@ -19,13 +19,13 @@ export default function Home() {
     "laces",
   ];
   const [modelInfo, setModelInfo] = useState<ModelInfo>({
-    mainBody: "#FFFFFF",
-    insideBody: "#FFFFFF",
+    mainBody: "#000000",
+    insideBody: "#757575",
     soles: "#FFFFFF",
-    insideSoles: "#FFFFFF",
-    smallFlop: "#FFFFFF",
-    bigFlop: "#FFFFFF",
-    laces: "#FFFFFF",
+    insideSoles: "#606060",
+    smallFlop: "#000000",
+    bigFlop: "#C4C4C4",
+    laces: "#000000",
     texture: null,
   });
 

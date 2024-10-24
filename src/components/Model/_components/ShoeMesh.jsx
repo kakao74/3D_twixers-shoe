@@ -15,10 +15,10 @@ const ShoeMesh = () => {
     if (modelInfo) {
       materials.Main_Body_Material.color = new THREE.Color(modelInfo.mainBody);
       materials.Insole_Right_Material.color = new THREE.Color(
-        modelInfo.insideBody
+        modelInfo.insideSoles
       );
       materials.Sole_Material.color = new THREE.Color(modelInfo.soles);
-      materials.Main_Shoe_Inside.color = new THREE.Color(modelInfo.insideSoles);
+      materials.Main_Shoe_Inside.color = new THREE.Color(modelInfo.insideBody);
       materials.Big_Shoe_Flap_Material.color = new THREE.Color(
         modelInfo.bigFlop
       );
@@ -34,22 +34,19 @@ const ShoeMesh = () => {
   }, [modelInfo, materials]);
 
   return (
-    <group dispose={null}>
+    <>
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Nike_Air_Force_Right.children[0].geometry}
         material={materials.Sole_Material}
       />
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Nike_Air_Force_Right.children[1].geometry}
         material={materials.Insole_Right_Material}
       />
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Nike_Air_Force_Right.children[2].geometry}
         material={materials.Main_Body_Material}
       >
@@ -65,31 +62,27 @@ const ShoeMesh = () => {
       </mesh>
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Nike_Air_Force_Right.children[3].geometry}
         material={materials.Main_Shoe_Inside}
       />
 
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Big_Shoe_Flap.geometry}
         material={materials.Big_Shoe_Flap_Material}
       />
 
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Laces.geometry}
         material={materials.Laces_Material}
       />
       <mesh
         castShadow
-        receiveShadow
         geometry={nodes.Small_Shoe_Flap.geometry}
         material={materials.Small_Shoe_Flap_Material}
       />
-    </group>
+    </>
   );
 };
 

@@ -182,7 +182,7 @@ const ModelView = forwardRef(({ groupRef, cameraRef }, ref) => {
     <View className="w-full h-full absolute">
       <ambientLight intensity={0.3} />
       <Environment preset="city" />
-      <PerspectiveCamera makeDefault position={[0, 0, 1]} ref={cameraRef} />
+      <PerspectiveCamera makeDefault position={[0, 0, 0.8]} ref={cameraRef} />
 
       <group ref={groupRef} position={[0, -0.1, 0]}>
         <Suspense fallback={<Loader />}>

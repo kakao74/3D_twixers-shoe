@@ -6,22 +6,16 @@ import { SketchPicker } from "react-color";
 
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
-import ModelContext, { MeshType, ModelInfo } from "@/libs/ModelContext";
+import ModelContext, {
+  MeshType,
+  ModelInfo,
+  TextureSettings,
+} from "@/libs/ModelContext";
 
 export default function Home() {
   const [selectedMesh, setSelectedMesh] = useState<MeshType>("mainBody");
+  const [textureUrl, setTextureUrl] = useState<string | null>(null);
 
-  const [textureUrl, setTextureUrl] = useState<string | null>(null); // State to store the file Blob
-
-  const meshNamesArr = [
-    "mainBody",
-    "insideBody",
-    "soles",
-    "insideSoles",
-    "smallFlop",
-    "bigFlop",
-    "laces",
-  ];
   const [modelInfo, setModelInfo] = useState<ModelInfo>({
     mainBody: "#000000",
     insideBody: "#757575",
@@ -33,7 +27,13 @@ export default function Home() {
     texture: null,
   });
 
-  const color = modelInfo[selectedMesh];
+  const [textureSettings, setTextureSettings] = useState<TextureSettings>({
+    xPos: -0.05,
+    yPos: 0.05,
+    xRotation: 0,
+    yRotation: 0,
+    scale: 0.15,
+  });
 
   const onChangeMethod = (color: any) => {
     setModelInfo((prev) => ({
@@ -45,13 +45,10 @@ export default function Home() {
   const handleDrop = (files: File[]) => {
     if (files.length > 0) {
       const selectedFile = files[0];
-
       const url = URL.createObjectURL(selectedFile);
       setTextureUrl(url);
     }
   };
-
-  const [xPos, setXPos] = useState(0);
 
   return (
     <ModelContext.Provider
@@ -62,45 +59,87 @@ export default function Home() {
         setSelectedMesh,
         textureUrl,
         setTextureUrl,
+        textureSettings,
+        setTextureSettings,
       }}
     >
-      <div className="w-full flex justify-center items-stretch">
-        <div className="w-[90%] flex justify-between items-stretch">
-          <div className="w-1/3 flex flex-col  justify-center items-center border space-y-5">
-            <SketchPicker
-              color={color}
-              onChange={(color) => onChangeMethod(color)}
+      <div className="w-[95%]  flex justify-between items-center ">
+        <div className="w-1/5 flex flex-col justify-center items-center space-y-5">
+          <SketchPicker
+            color={modelInfo[selectedMesh]}
+            onChange={onChangeMethod}
+          />
+
+          <div className="w-full">
+            <h1>Upload Texture</h1>
+            <DragDrop onDrop={handleDrop} />
+          </div>
+
+          <div className="flex flex-col justify-between items-center space-y-4 w-full">
+            <Slider
+              text="xPos"
+              value={textureSettings.xPos}
+              setValue={(value) =>
+                setTextureSettings((prev) => ({ ...prev, xPos: value }))
+              }
             />
-
-            <div className="w-full">
-              <h1>Upload Texture</h1>
-              <DragDrop onDrop={handleDrop} />
-            </div>
-
-            <Slider value={xPos} setValue={setXPos} />
+            <Slider
+              text="yPos"
+              value={textureSettings.yPos}
+              setValue={(value) =>
+                setTextureSettings((prev) => ({ ...prev, yPos: value }))
+              }
+            />
+            <Slider
+              text="x rotation"
+              value={textureSettings.xRotation}
+              setValue={(value) =>
+                setTextureSettings((prev) => ({ ...prev, xRotation: value }))
+              }
+            />
+            <Slider
+              text="y rotation"
+              value={textureSettings.yRotation}
+              setValue={(value) =>
+                setTextureSettings((prev) => ({ ...prev, yRotation: value }))
+              }
+            />
+            <Slider
+              text="scale"
+              value={textureSettings.scale}
+              setValue={(value) =>
+                setTextureSettings((prev) => ({ ...prev, scale: value }))
+              }
+            />
           </div>
+        </div>
 
-          <div className="w-1/2">
-            <Model className="border-2 rounded-lg w-full h-full py-14 sm:py-10 sm:px-10 px-5" />
-          </div>
+        <div className="w-1/2">
+          <Model className=" w-full h-full py-14 sm:py-10 sm:px-10 px-5" />
+        </div>
 
-          <div className="self-center flex-col justify-between items-center space-y-5">
-            {meshNamesArr.map((meshName, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setSelectedMesh(meshName as MeshType);
-                }}
-                className={`w-full py-3 rounded-lg border shadow-md transition-all duration-200 ease-in-out ${
-                  selectedMesh === meshName
-                    ? "bg-sky-500 text-white"
-                    : "bg-white text-black"
-                }`}
-              >
-                {meshName}
-              </button>
-            ))}
-          </div>
+        <div className="w-1/5 self-center flex-col justify-between items-center space-y-5">
+          {[
+            "mainBody",
+            "insideBody",
+            "soles",
+            "insideSoles",
+            "smallFlop",
+            "bigFlop",
+            "laces",
+          ].map((meshName, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedMesh(meshName as MeshType)}
+              className={`w-full py-3 rounded-lg border shadow-md transition-all duration-200 ease-in-out ${
+                selectedMesh === meshName
+                  ? "bg-sky-500 text-white"
+                  : "bg-white text-black"
+              }`}
+            >
+              {meshName}
+            </button>
+          ))}
         </div>
       </div>
     </ModelContext.Provider>

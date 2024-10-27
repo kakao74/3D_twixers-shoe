@@ -5,7 +5,7 @@ import * as THREE from "three";
 import ModelContext from "@/libs/ModelContext";
 
 const ShoeMesh = () => {
-  const { modelInfo, textureUrl } = useContext(ModelContext);
+  const { modelInfo, textureUrl, textureSettings } = useContext(ModelContext);
 
   const { nodes, materials } = useGLTF("/models/shoe.glb");
 
@@ -52,11 +52,12 @@ const ShoeMesh = () => {
       >
         {texture && (
           <Decal
-            position={[-0.05, 0.05, 0]}
-            rotation={[0, 0, 0]}
-            scale={0.15}
+            position={[textureSettings.xPos, textureSettings.yPos, 0]}
+            rotation={[textureSettings.xRotation, textureSettings.yRotation, 0]}
+            scale={textureSettings.scale}
             map={texture}
-            depthTest={true}
+            depthTest={false}
+            depthWrite={true}
           />
         )}
       </mesh>

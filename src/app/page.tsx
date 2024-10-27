@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SketchPicker } from "react-color";
 
 import DragDrop from "@/components/DragDrop";
+import Slider from "@/components/Model/_components/Slider";
 import ModelContext, { MeshType, ModelInfo } from "@/libs/ModelContext";
 
 export default function Home() {
@@ -50,6 +51,8 @@ export default function Home() {
     }
   };
 
+  const [xPos, setXPos] = useState(0);
+
   return (
     <ModelContext.Provider
       value={{
@@ -63,7 +66,7 @@ export default function Home() {
     >
       <div className="w-full flex justify-center items-stretch">
         <div className="w-[90%] flex justify-between items-stretch">
-          <div className="w-1/3 flex flex-col  justify-center items-center border">
+          <div className="w-1/3 flex flex-col  justify-center items-center border space-y-5">
             <SketchPicker
               color={color}
               onChange={(color) => onChangeMethod(color)}
@@ -73,6 +76,8 @@ export default function Home() {
               <h1>Upload Texture</h1>
               <DragDrop onDrop={handleDrop} />
             </div>
+
+            <Slider value={xPos} setValue={setXPos} />
           </div>
 
           <div className="w-1/2">

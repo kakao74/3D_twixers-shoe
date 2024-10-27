@@ -10,13 +10,7 @@ import {
   useState,
 } from "react";
 
-import {
-  AccumulativeShadows,
-  Environment,
-  PerspectiveCamera,
-  RandomizedLight,
-  View,
-} from "@react-three/drei";
+import { Environment, PerspectiveCamera, View } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -51,6 +45,21 @@ const Model = ({ className }) => {
       setCanvasElement(document.getElementById("meshContainer"));
     }
   }, []);
+
+  useEffect(() => {
+    console.log(isDragging);
+
+    if (groupRef.current && !isDragging) {
+      gsap.to(groupRef.current.rotation, {
+        x: 0,
+        y: 2 * Math.PI,
+        z: 0,
+        duration: 10,
+        repeat: -1,
+        ease: "none",
+      });
+    }
+  }, [groupRef, isDragging]);
 
   const handleClick = (event) => {
     const rect = canvasContainerRef.current.getBoundingClientRect();
@@ -170,35 +179,10 @@ const Model = ({ className }) => {
 
 const ModelView = forwardRef(({ groupRef, cameraRef }, ref) => {
   return (
-    <View className={`w-full h-full absolute `}>
+    <View className="w-full h-full absolute">
       <ambientLight intensity={0.3} />
       <Environment preset="city" />
       <PerspectiveCamera makeDefault position={[0, 0, 1]} ref={cameraRef} />
-
-      <AccumulativeShadows
-        temporal
-        frames={30}
-        alphaTest={0.85}
-        scale={2}
-        rotation={[Math.PI / 2, 0, 0]}
-        position={[0, 0, -0.3]}
-      >
-        <RandomizedLight
-          amount={4}
-          radius={9}
-          intensity={2}
-          ambient={0.25}
-          position={[-5, 5, -5]}
-        />
-
-        <RandomizedLight
-          amount={4}
-          radius={5}
-          intensity={0.25}
-          ambient={0.55}
-          position={[-5, 5, 2]}
-        />
-      </AccumulativeShadows>
 
       <group ref={groupRef} position={[0, -0.1, 0]}>
         <Suspense fallback={<Loader />}>

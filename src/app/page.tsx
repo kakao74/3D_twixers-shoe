@@ -4,10 +4,13 @@ import Model from "@/components/Model/Model";
 import { useState } from "react";
 import { SketchPicker } from "react-color";
 
+import DragDrop from "@/components/DragDrop";
 import ModelContext, { MeshType, ModelInfo } from "@/libs/ModelContext";
 
 export default function Home() {
   const [selectedMesh, setSelectedMesh] = useState<MeshType>("mainBody");
+
+  const [textureUrl, setTextureUrl] = useState<string | null>(null); // State to store the file Blob
 
   const meshNamesArr = [
     "mainBody",
@@ -38,17 +41,38 @@ export default function Home() {
     }));
   };
 
+  const handleDrop = (files: File[]) => {
+    if (files.length > 0) {
+      const selectedFile = files[0];
+
+      const url = URL.createObjectURL(selectedFile);
+      setTextureUrl(url);
+    }
+  };
+
   return (
     <ModelContext.Provider
-      value={{ modelInfo, setModelInfo, selectedMesh, setSelectedMesh }}
+      value={{
+        modelInfo,
+        setModelInfo,
+        selectedMesh,
+        setSelectedMesh,
+        textureUrl,
+        setTextureUrl,
+      }}
     >
       <div className="w-full flex justify-center items-stretch">
         <div className="w-[90%] flex justify-between items-stretch">
-          <div className="flex  justify-center items-center">
+          <div className="w-1/3 flex flex-col  justify-center items-center border">
             <SketchPicker
               color={color}
               onChange={(color) => onChangeMethod(color)}
             />
+
+            <div className="w-full">
+              <h1>Upload Texture</h1>
+              <DragDrop onDrop={handleDrop} />
+            </div>
           </div>
 
           <div className="w-1/2">

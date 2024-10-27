@@ -5,11 +5,11 @@ import * as THREE from "three";
 import ModelContext from "@/libs/ModelContext";
 
 const ShoeMesh = () => {
-  const { modelInfo } = useContext(ModelContext);
+  const { modelInfo, textureUrl } = useContext(ModelContext);
 
   const { nodes, materials } = useGLTF("/models/shoe.glb");
 
-  const texture = useTexture("/cactus.png");
+  const texture = useTexture(textureUrl ? textureUrl : "/cactus.png");
 
   useEffect(() => {
     if (modelInfo) {
@@ -88,5 +88,4 @@ const ShoeMesh = () => {
 
 export default ShoeMesh;
 
-useTexture.preload("/cactus.png");
 useGLTF.preload("/models/shoe.glb");

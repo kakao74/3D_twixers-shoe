@@ -23,8 +23,12 @@ export interface ModelInfo {
 interface ModelContextType {
   modelInfo: ModelInfo;
   setModelInfo: (modelInfo: ModelInfo) => void;
-  selectedMesh: MeshType; // Add selectedMesh
-  setSelectedMesh: (mesh: MeshType) => void; // Add setSelectedMesh
+
+  selectedMesh: MeshType;
+  setSelectedMesh: (mesh: MeshType) => void; 
+
+  textureUrl: string | null;
+  setTextureUrl: (textureUrl: string) => void
 }
 
 const ModelContext = createContext<ModelContextType | undefined>(undefined);

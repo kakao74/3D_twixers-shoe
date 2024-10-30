@@ -1,16 +1,14 @@
 "use client";
 
 import gsap from "gsap";
-import {
-  forwardRef,
-  Suspense,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Suspense, useContext, useEffect, useRef, useState } from "react";
 
-import { Environment, PerspectiveCamera, View } from "@react-three/drei";
+import {
+  Environment,
+  OrbitControls,
+  PerspectiveCamera,
+  View,
+} from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -21,13 +19,11 @@ import ShoeMesh from "./_components/ShoeMesh";
 const Model = ({ className }) => {
   const { setSelectedMesh } = useContext(ModelContext);
 
-  console.log("re-rendered");
-
-  const [targetRotation, setTargetRotation] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
+  // const [targetRotation, setTargetRotation] = useState({
+  //   x: 0,
+  //   y: 0,
+  //   z: 0,
+  // });
   const [canvasElement, setCanvasElement] = useState("");
 
   const cameraRef = useRef();
@@ -38,13 +34,13 @@ const Model = ({ className }) => {
   const mouse = { x: 0, y: 0 };
 
   let isDragging = false;
-  let prevRotation = { x: 0, y: 0 };
+  // let prevRotation = { x: 0, y: 0 };
 
   useEffect(() => {
     if (canvasContainerRef.current) {
       setCanvasElement(document.getElementById("meshContainer"));
     }
-  }, []);
+  });
 
   useEffect(() => {
     console.log(isDragging);
@@ -103,64 +99,64 @@ const Model = ({ className }) => {
     }
   };
 
-  let startMousPos = { x: 0, y: 0 };
-  const targetRotationRef = useRef({ x: 0, y: 0, z: 0 });
-  function handleMouseDown(e) {
-    isDragging = true;
+  // let startMousPos = { x: 0, y: 0 };
+  // const targetRotationRef = useRef({ x: 0, y: 0, z: 0 });
+  // function handleMouseDown(e) {
+  //   isDragging = true;
 
-    startMousPos = { x: e.offsetX, y: e.offsetY };
-  }
+  //   startMousPos = { x: e.offsetX, y: e.offsetY };
+  // }
 
-  function handleMouseMove(e) {
-    if (!isDragging || !groupRef.current) return;
+  // function handleMouseMove(e) {
+  //   if (!isDragging || !groupRef.current) return;
 
-    const deltaMove = {
-      x: prevRotation.x + (startMousPos.x - e.offsetX) * -1,
-      y: prevRotation.y + (startMousPos.y - e.offsetY) * -1,
-    };
+  //   const deltaMove = {
+  //     x: prevRotation.x + (startMousPos.x - e.offsetX) * -1,
+  //     y: prevRotation.y + (startMousPos.y - e.offsetY) * -1,
+  //   };
 
-    setTargetRotation({ x: deltaMove.y, y: deltaMove.x, z: 0 });
-    targetRotationRef.current = { x: deltaMove.x, y: deltaMove.y };
-  }
+  //   setTargetRotation({ x: deltaMove.y, y: deltaMove.x, z: 0 });
+  //   targetRotationRef.current = { x: deltaMove.x, y: deltaMove.y };
+  // }
 
-  function handleMouseUp(e) {
-    isDragging = false;
+  // function handleMouseUp(e) {
+  //   isDragging = false;
 
-    prevRotation = {
-      x: targetRotationRef.current.x,
-      y: targetRotationRef.current.y,
-    };
-  }
+  //   prevRotation = {
+  //     x: targetRotationRef.current.x,
+  //     y: targetRotationRef.current.y,
+  //   };
+  // }
 
   useEffect(() => {
     const canvasContainer = canvasContainerRef.current;
     canvasContainer.addEventListener("click", handleClick);
 
-    canvasContainer.addEventListener("mousedown", handleMouseDown);
+    // canvasContainer.addEventListener("mousedown", handleMouseDown);
 
-    canvasContainer.addEventListener("mousemove", handleMouseMove);
+    // canvasContainer.addEventListener("mousemove", handleMouseMove);
 
-    canvasContainer.addEventListener("mouseup", handleMouseUp);
+    // canvasContainer.addEventListener("mouseup", handleMouseUp);
 
     return () => {
       canvasContainer.removeEventListener("click", handleClick);
-      canvasContainer.removeEventListener("mousedown", handleMouseDown);
-      canvasContainer.removeEventListener("mousemove", handleMouseMove);
-      canvasContainer.removeEventListener("mouseup", handleMouseUp);
+      // canvasContainer.removeEventListener("mousedown", handleMouseDown);
+      // canvasContainer.removeEventListener("mousemove", handleMouseMove);
+      // canvasContainer.removeEventListener("mouseup", handleMouseUp);
     };
   }, [canvasContainerRef]);
 
-  useEffect(() => {
-    if (groupRef.current) {
-      gsap.to(groupRef.current.rotation, {
-        x: targetRotation.x * 0.005,
-        y: targetRotation.y * 0.005,
-        z: targetRotation.z,
-        duration: 0.8,
-        ease: "power3.out",
-      });
-    }
-  }, [targetRotation]);
+  // useEffect(() => {
+  //   if (groupRef.current) {
+  //     gsap.to(groupRef.current.rotation, {
+  //       x: targetRotation.x * 0.005,
+  //       y: targetRotation.y * 0.005,
+  //       z: targetRotation.z,
+  //       duration: 0.8,
+  //       ease: "power3.out",
+  //     });
+  //   }
+  // }, [targetRotation]);
 
   return (
     <div ref={canvasContainerRef} id="meshContainer" className={className}>
@@ -168,7 +164,12 @@ const Model = ({ className }) => {
         <div className="h-full w-full overflow-hidden relative">
           <ModelView groupRef={groupRef} cameraRef={cameraRef} />
 
-          <Canvas shadows className="w-full h-full" eventSource={canvasElement}>
+          <Canvas
+            shadows
+            // gl={{ preserveDrawingBuffer: true }}
+            className="w-full h-full"
+            eventSource={canvasElement}
+          >
             <View.Port />
           </Canvas>
         </div>
@@ -177,7 +178,9 @@ const Model = ({ className }) => {
   );
 };
 
-const ModelView = forwardRef(({ groupRef, cameraRef }, ref) => {
+export default Model;
+
+const ModelView = ({ groupRef, cameraRef }) => {
   return (
     <View className="w-full h-full absolute">
       <ambientLight intensity={0.3} />
@@ -189,8 +192,10 @@ const ModelView = forwardRef(({ groupRef, cameraRef }, ref) => {
           <ShoeMesh />
         </Suspense>
       </group>
+
+      <OrbitControls makeDefault />
     </View>
   );
-});
+};
 
-export default Model;
+ModelView.displayName = "ModelView";

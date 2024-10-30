@@ -5,11 +5,15 @@ import * as THREE from "three";
 import ModelContext from "@/libs/ModelContext";
 
 const ShoeMesh = () => {
-  const { modelInfo, textureUrl, textureSettings } = useContext(ModelContext);
+  const { modelInfo, textureSettings } = useContext(ModelContext);
+
+  console.log(textureSettings);
 
   const { nodes, materials } = useGLTF("/models/shoe.glb");
 
-  const texture = useTexture(textureUrl ? textureUrl : "/cactus.png");
+  const texture = useTexture(
+    textureSettings.url ? textureSettings.url : "/cactus.png"
+  );
 
   useEffect(() => {
     if (modelInfo) {

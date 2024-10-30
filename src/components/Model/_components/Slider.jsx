@@ -1,7 +1,7 @@
 "use client";
 
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const Slider = ({ text, value, setValue }) => {
   const [isDown, setIsDown] = useState(false);
@@ -15,7 +15,7 @@ const Slider = ({ text, value, setValue }) => {
     setPos((rect.width * (intervalFactor * value + 1)) / 2);
   }, [dotRef]);
 
-  function handleMouseMove(e) {
+  const handleMouseMove = useCallback((e) => {
     if (!isDown) return;
     const rect = dotRef.current.parentElement.getBoundingClientRect();
     const newValue = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
@@ -24,7 +24,7 @@ const Slider = ({ text, value, setValue }) => {
     setPos(newValue);
 
     console.log("new val: ", newValue / rect.width);
-  }
+  });
 
   useEffect(() => {
     function handleMouseUp() {

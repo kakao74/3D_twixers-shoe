@@ -1,27 +1,23 @@
 "use client";
 
-import { ChangeEvent, DragEvent, useState } from "react";
+import { useState } from "react";
 
-interface CustomDragAndDropProps {
-  onDrop: (files: File[]) => void; // Define the type of the onDrop function
-}
-
-const DragDrop: React.FC<CustomDragAndDropProps> = ({ onDrop }) => {
+const DragDrop = ({ onDrop }) => {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(false);
   };
 
-  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(false);
@@ -36,7 +32,7 @@ const DragDrop: React.FC<CustomDragAndDropProps> = ({ onDrop }) => {
     document.getElementById("file-input")?.click();
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event) => {
     const files = Array.from(event.target.files || []); // Ensure files is an array
     if (onDrop) {
       onDrop(files); // Call the onDrop prop function with the selected files

@@ -1,22 +1,17 @@
 "use client";
 
-import Model from "@/components/Model/Model";
+import Model from "@/components/Model";
 import { useState } from "react";
 import { SketchPicker } from "react-color";
 
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
-import ModelContext, {
-  MeshType,
-  ModelInfo,
-  TextureSettings,
-} from "@/libs/ModelContext";
+import ModelContext from "@/libs/ModelContext";
 
 export default function Home() {
-  const [selectedMesh, setSelectedMesh] = useState<MeshType>("mainBody");
-  const [textureUrl, setTextureUrl] = useState<string | null>(null);
+  const [selectedMesh, setSelectedMesh] = useState("mainBody");
 
-  const [modelInfo, setModelInfo] = useState<ModelInfo>({
+  const [modelInfo, setModelInfo] = useState({
     mainBody: "#000000",
     insideBody: "#757575",
     soles: "#FFFFFF",
@@ -27,26 +22,27 @@ export default function Home() {
     texture: null,
   });
 
-  const [textureSettings, setTextureSettings] = useState<TextureSettings>({
+  const [textureSettings, setTextureSettings] = useState({
     xPos: -0.05,
     yPos: 0.05,
     xRotation: 0,
     yRotation: 0,
     scale: 0.15,
+    url: "",
   });
 
-  const onChangeMethod = (color: any) => {
+  const onChangeMethod = (color) => {
     setModelInfo((prev) => ({
       ...prev,
       [selectedMesh]: color.hex,
     }));
   };
 
-  const handleDrop = (files: File[]) => {
+  const handleDrop = (files) => {
     if (files.length > 0) {
       const selectedFile = files[0];
       const url = URL.createObjectURL(selectedFile);
-      setTextureUrl(url);
+      setTextureSettings((prev) => ({ ...prev, url: url }));
     }
   };
 
@@ -57,13 +53,11 @@ export default function Home() {
         setModelInfo,
         selectedMesh,
         setSelectedMesh,
-        textureUrl,
-        setTextureUrl,
         textureSettings,
         setTextureSettings,
       }}
     >
-      <div className="w-[95%]  flex justify-between items-center ">
+      <div className="w-[95%]  flex justify-between items-stretch ">
         <div className="w-1/5 flex flex-col justify-center items-center space-y-5">
           <SketchPicker
             color={modelInfo[selectedMesh]}
@@ -91,14 +85,14 @@ export default function Home() {
               }
             />
             <Slider
-              text="x rotation"
+              text="x rot"
               value={textureSettings.xRotation}
               setValue={(value) =>
                 setTextureSettings((prev) => ({ ...prev, xRotation: value }))
               }
             />
             <Slider
-              text="y rotation"
+              text="y rot"
               value={textureSettings.yRotation}
               setValue={(value) =>
                 setTextureSettings((prev) => ({ ...prev, yRotation: value }))
@@ -130,7 +124,7 @@ export default function Home() {
           ].map((meshName, index) => (
             <button
               key={index}
-              onClick={() => setSelectedMesh(meshName as MeshType)}
+              onClick={() => setSelectedMesh(meshName)}
               className={`w-full py-3 rounded-lg border shadow-md transition-all duration-200 ease-in-out ${
                 selectedMesh === meshName
                   ? "bg-sky-500 text-white"

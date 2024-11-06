@@ -134,6 +134,7 @@ const Model = () => {
           </group>
 
           <OrbitControls
+            autoRotate
             enableZoom={false}
             minPolarAngle={0}
             maxPolarAngle={Math.PI / 2}

@@ -1,7 +1,7 @@
 "use client";
 
 import Model from "@/components/Model";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
@@ -12,6 +12,7 @@ export default function Home() {
   const [isHoverColorButton, setIsHoverColorButton] = useState(null);
   const [isHoverSketchPicker, setIsHoverSketchPicker] = useState(null);
   const [selectedMesh, setSelectedMesh] = useState("mainBody");
+  const [isFull, setIsFull] = useState(false);
 
   const [modelInfo, setModelInfo] = useState({
     mainBody: "#000000",
@@ -32,6 +33,22 @@ export default function Home() {
     scale: 0.15,
     url: "",
   });
+
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  console.log("window height: ", window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+
+    // Set up event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const onChangeMethod = (color) => {
     setModelInfo((prev) => ({
@@ -79,12 +96,34 @@ export default function Home() {
     >
       <div className="relative h-screen w-full flex flex-col justify-between items-center bg-gray-200">
         <h1 className="left-12 top-8 absolute text-5xl font-bold  ">Twixers</h1>
+        <span className="right-12 top-8 absolute text-lg w-72">
+          This model is the work of 0marvin-schimanski0 from cgtrader.com
+        </span>
 
-        <div className="w-full h-3/5 ">
+        <div
+          className="relative w-full transition-all duration-300 ease-in-out "
+          style={{
+            height: isFull ? windowHeight : (windowHeight * 3) / 5,
+          }}
+        >
           <Model className=" w-full h-full " />
+
+          <button
+            className="rounded-t-lg bg-gray-300 w-24 flex justify-center items-center absolute left-1/2 -translate-y-full border border-b-0 border-black hover:bg-gray-400 transition-all duration-400"
+            onClick={() => setIsFull(!isFull)}
+          >
+            {isFull ? "Show" : "Hide"}
+          </button>
         </div>
 
-        <div className=" w-full h-2/5 flex justify-between items-center p-5">
+        <div
+          className=" w-full flex justify-between items-center  transition-all duration-300 ease-in-out overflow-hidden"
+          style={
+            isFull
+              ? { height: 0, padding: 0 }
+              : { height: (windowHeight * 2) / 5, padding: 20 }
+          }
+        >
           <div className="w-2/5 grid grid-cols-3 gap-x-2 gap-y-8">
             {[
               "mainBody",

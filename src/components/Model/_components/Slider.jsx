@@ -22,8 +22,6 @@ const Slider = ({ text, value, setValue }) => {
 
     setValue(((newValue * 2) / rect.width - 1) / intervalFactor);
     setPos(newValue);
-
-    console.log("new val: ", newValue / rect.width);
   });
 
   useEffect(() => {

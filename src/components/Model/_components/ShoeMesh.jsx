@@ -1,93 +1,60 @@
-import { Decal, useGLTF, useTexture } from "@react-three/drei";
-import { useContext, useEffect } from "react";
-import * as THREE from "three";
+"use client";
 
 import ModelContext from "@/libs/ModelContext";
+import { Decal, useGLTF, useTexture } from "@react-three/drei";
+import { useContext, useEffect, useRef } from "react";
+import * as THREE from "three";
 
 const ShoeMesh = () => {
   const { modelInfo, textureSettings } = useContext(ModelContext);
+  const { scene, materials } = useGLTF("/models/shoe.glb");
 
-  console.log(textureSettings);
-
-  const { nodes, materials } = useGLTF("/models/shoe.glb");
-
-  const texture = useTexture(
+  const decalTexture = useTexture(
     textureSettings.url ? textureSettings.url : "/cactus.png"
   );
 
+  // Apply material colors based on modelInfo
   useEffect(() => {
     if (modelInfo) {
-      materials.Main_Body_Material.color = new THREE.Color(modelInfo.mainBody);
-      materials.Insole_Right_Material.color = new THREE.Color(
-        modelInfo.insideSoles
-      );
-      materials.Sole_Material.color = new THREE.Color(modelInfo.soles);
+      materials.Main_Body.color = new THREE.Color(modelInfo.mainBody);
+      materials.Insole.color = new THREE.Color(modelInfo.insideSoles);
+      materials.Sole.color = new THREE.Color(modelInfo.soles);
       materials.Main_Shoe_Inside.color = new THREE.Color(modelInfo.insideBody);
-      materials.Big_Shoe_Flap_Material.color = new THREE.Color(
-        modelInfo.bigFlop
-      );
-      materials.Laces_Material.color = new THREE.Color(modelInfo.laces);
-      materials.Small_Shoe_Flap_Material.color = new THREE.Color(
-        modelInfo.smallFlop
-      );
+      materials.Flap.color = new THREE.Color(modelInfo.bigFlop);
+      materials.Laces.color = new THREE.Color(modelInfo.laces);
+      materials.Tag.color = new THREE.Color(modelInfo.smallFlop);
 
       Object.values(materials).forEach((material) => {
         material.needsUpdate = true;
       });
     }
-  }, [modelInfo, materials]);
+
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+  }, [modelInfo, materials, scene]);
+
+  const mainBodyNode = useRef(scene.getObjectByName("Plane040_2"));
 
   return (
-    <>
-      <mesh
-        castShadow
-        geometry={nodes.Nike_Air_Force_Right.children[0].geometry}
-        material={materials.Sole_Material}
-      />
-      <mesh
-        castShadow
-        geometry={nodes.Nike_Air_Force_Right.children[1].geometry}
-        material={materials.Insole_Right_Material}
-      />
-      <mesh
-        castShadow
-        geometry={nodes.Nike_Air_Force_Right.children[2].geometry}
-        material={materials.Main_Body_Material}
-      >
-        {texture && (
-          <Decal
-            position={[textureSettings.xPos, textureSettings.yPos, 0]}
-            rotation={[textureSettings.xRotation, textureSettings.yRotation, 0]}
-            scale={textureSettings.scale}
-            map={texture}
-            depthTest={false}
-            depthWrite={true}
-          />
-        )}
-      </mesh>
-      <mesh
-        castShadow
-        geometry={nodes.Nike_Air_Force_Right.children[3].geometry}
-        material={materials.Main_Shoe_Inside}
-      />
+    <group dispose={null}>
+      <primitive object={scene} />
 
-      <mesh
-        castShadow
-        geometry={nodes.Big_Shoe_Flap.geometry}
-        material={materials.Big_Shoe_Flap_Material}
-      />
-
-      <mesh
-        castShadow
-        geometry={nodes.Laces.geometry}
-        material={materials.Laces_Material}
-      />
-      <mesh
-        castShadow
-        geometry={nodes.Small_Shoe_Flap.geometry}
-        material={materials.Small_Shoe_Flap_Material}
-      />
-    </>
+      {mainBodyNode && decalTexture && (
+        <Decal
+          mesh={mainBodyNode}
+          map={decalTexture}
+          position={[textureSettings.xPos, textureSettings.yPos, 0.1]}
+          rotation={[textureSettings.xRotation, textureSettings.yRotation, 0]}
+          scale={textureSettings.scale}
+          depthTest={true}
+          depthWrite={true}
+        />
+      )}
+    </group>
   );
 };
 

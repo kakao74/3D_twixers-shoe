@@ -1,30 +1,25 @@
 "use client";
 
 import gsap from "gsap";
-import { Suspense, useContext, useEffect, useRef, useState } from "react";
+import { Suspense, useContext, useEffect, useRef } from "react";
 
 import {
+  AccumulativeShadows,
   Environment,
   OrbitControls,
   PerspectiveCamera,
-  View,
+  RandomizedLight,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 
 import ModelContext from "@/libs/ModelContext";
+import Lights from "./_components/Lights";
 import Loader from "./_components/Loader";
 import ShoeMesh from "./_components/ShoeMesh";
 
 const Model = ({ className }) => {
   const { setSelectedMesh } = useContext(ModelContext);
-
-  // const [targetRotation, setTargetRotation] = useState({
-  //   x: 0,
-  //   y: 0,
-  //   z: 0,
-  // });
-  const [canvasElement, setCanvasElement] = useState("");
 
   const cameraRef = useRef();
   const groupRef = useRef();
@@ -34,17 +29,8 @@ const Model = ({ className }) => {
   const mouse = { x: 0, y: 0 };
 
   let isDragging = false;
-  // let prevRotation = { x: 0, y: 0 };
 
   useEffect(() => {
-    if (canvasContainerRef.current) {
-      setCanvasElement(document.getElementById("meshContainer"));
-    }
-  });
-
-  useEffect(() => {
-    console.log(isDragging);
-
     if (groupRef.current && !isDragging) {
       gsap.to(groupRef.current.rotation, {
         x: 0,
@@ -72,25 +58,25 @@ const Model = ({ className }) => {
       const mesh = intersects[0];
 
       switch (mesh.object.material.name) {
-        case "Laces_Material":
+        case "Laces":
           setSelectedMesh("laces");
           break;
-        case "Main_Body_Material":
+        case "Main_Body":
           setSelectedMesh("mainBody");
           break;
-        case "Insole_Right_Material":
+        case "Insole":
           setSelectedMesh("insideSoles");
           break;
-        case "Sole_Material":
+        case "Sole":
           setSelectedMesh("soles");
           break;
         case "Main_Shoe_Inside":
           setSelectedMesh("insideBody");
           break;
-        case "Big_Shoe_Flap_Material":
+        case "Flap":
           setSelectedMesh("bigFlop");
           break;
-        case "Small_Shoe_Flap_Material":
+        case "Tag":
           setSelectedMesh("smallFlop");
           break;
         default:
@@ -99,103 +85,63 @@ const Model = ({ className }) => {
     }
   };
 
-  // let startMousPos = { x: 0, y: 0 };
-  // const targetRotationRef = useRef({ x: 0, y: 0, z: 0 });
-  // function handleMouseDown(e) {
-  //   isDragging = true;
-
-  //   startMousPos = { x: e.offsetX, y: e.offsetY };
-  // }
-
-  // function handleMouseMove(e) {
-  //   if (!isDragging || !groupRef.current) return;
-
-  //   const deltaMove = {
-  //     x: prevRotation.x + (startMousPos.x - e.offsetX) * -1,
-  //     y: prevRotation.y + (startMousPos.y - e.offsetY) * -1,
-  //   };
-
-  //   setTargetRotation({ x: deltaMove.y, y: deltaMove.x, z: 0 });
-  //   targetRotationRef.current = { x: deltaMove.x, y: deltaMove.y };
-  // }
-
-  // function handleMouseUp(e) {
-  //   isDragging = false;
-
-  //   prevRotation = {
-  //     x: targetRotationRef.current.x,
-  //     y: targetRotationRef.current.y,
-  //   };
-  // }
-
   useEffect(() => {
     const canvasContainer = canvasContainerRef.current;
     canvasContainer.addEventListener("click", handleClick);
 
-    // canvasContainer.addEventListener("mousedown", handleMouseDown);
-
-    // canvasContainer.addEventListener("mousemove", handleMouseMove);
-
-    // canvasContainer.addEventListener("mouseup", handleMouseUp);
-
     return () => {
       canvasContainer.removeEventListener("click", handleClick);
-      // canvasContainer.removeEventListener("mousedown", handleMouseDown);
-      // canvasContainer.removeEventListener("mousemove", handleMouseMove);
-      // canvasContainer.removeEventListener("mouseup", handleMouseUp);
     };
   }, [canvasContainerRef]);
 
-  // useEffect(() => {
-  //   if (groupRef.current) {
-  //     gsap.to(groupRef.current.rotation, {
-  //       x: targetRotation.x * 0.005,
-  //       y: targetRotation.y * 0.005,
-  //       z: targetRotation.z,
-  //       duration: 0.8,
-  //       ease: "power3.out",
-  //     });
-  //   }
-  // }, [targetRotation]);
-
   return (
-    <div ref={canvasContainerRef} id="meshContainer" className={className}>
-      <div className="h-full w-full flex flex-col items-center">
-        <div className="h-full w-full overflow-hidden relative">
-          <ModelView groupRef={groupRef} cameraRef={cameraRef} />
+    <div
+      ref={canvasContainerRef}
+      id="meshContainer"
+      className="w-full h-full flex justify-center items-center"
+    >
+      <Suspense fallback={<Loader />}>
+        <Canvas shadows className="w-full h-full ">
+          <ambientLight intensity={0.5} />
+          <Environment preset="city" />
 
-          <Canvas
-            shadows
-            // gl={{ preserveDrawingBuffer: true }}
-            className="w-full h-full"
-            eventSource={canvasElement}
+          <PerspectiveCamera
+            position={[0, 0, 0.5]}
+            makeDefault
+            ref={cameraRef}
+          />
+
+          <AccumulativeShadows
+            temporal
+            frames={60}
+            alphaTest={0.85}
+            scae={10}
+            color="white"
+            position={[0, -0.14, 0]}
           >
-            <View.Port />
-          </Canvas>
-        </div>
-      </div>
+            <RandomizedLight
+              radius={2}
+              ambient={0.5}
+              position={[10, 5, -15]}
+              bias={0.001}
+            />
+          </AccumulativeShadows>
+
+          <group ref={groupRef} position={[0, -0.1, 0]}>
+            <Lights />
+
+            <ShoeMesh />
+          </group>
+
+          <OrbitControls
+            enableZoom={false}
+            minPolarAngle={0}
+            maxPolarAngle={Math.PI / 2}
+          />
+        </Canvas>
+      </Suspense>
     </div>
   );
 };
 
 export default Model;
-
-const ModelView = ({ groupRef, cameraRef }) => {
-  return (
-    <View className="w-full h-full absolute">
-      <ambientLight intensity={0.3} />
-      <Environment preset="city" />
-      <PerspectiveCamera makeDefault position={[0, 0, 0.8]} ref={cameraRef} />
-
-      <group ref={groupRef} position={[0, -0.1, 0]}>
-        <Suspense fallback={<Loader />}>
-          <ShoeMesh />
-        </Suspense>
-      </group>
-
-      <OrbitControls makeDefault />
-    </View>
-  );
-};
-
-ModelView.displayName = "ModelView";

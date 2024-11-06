@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const DragDrop = ({ onDrop }) => {
+const DragDrop = ({ onDrop, className }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (event) => {
@@ -45,7 +45,7 @@ const DragDrop = ({ onDrop }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleClick}
-      className={`w-full border-2 p-4 cursor-pointer transition-all ${
+      className={`flex-1 text-center w-full border-2 p-4 cursor-pointer transition-all ${
         isDragging ? "border-blue-500" : "border-gray-400"
       }`}
       style={{ borderStyle: "dashed" }}

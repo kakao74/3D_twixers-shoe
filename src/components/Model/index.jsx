@@ -1,8 +1,5 @@
 "use client";
 
-import gsap from "gsap";
-import { Suspense, useContext, useEffect, useRef } from "react";
-
 import {
   AccumulativeShadows,
   Environment,
@@ -11,12 +8,31 @@ import {
   RandomizedLight,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { memo, Suspense, useContext, useEffect, useRef } from "react";
 import * as THREE from "three";
 
 import ModelContext from "@/libs/ModelContext";
 import Lights from "./_components/Lights";
 import Loader from "./_components/Loader";
 import ShoeMesh from "./_components/ShoeMesh";
+
+const Shadows = memo(() => (
+  <AccumulativeShadows
+    temporal
+    frames={60}
+    alphaTest={0.85}
+    scale={10}
+    color="white"
+    position={[0, -0.14, 0]}
+  >
+    <RandomizedLight
+      radius={2}
+      ambient={0.5}
+      position={[10, 5, -15]}
+      bias={0.001}
+    />
+  </AccumulativeShadows>
+));
 
 const Model = () => {
   const { setSelectedMesh } = useContext(ModelContext);
@@ -27,21 +43,6 @@ const Model = () => {
 
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = { x: 0, y: 0 };
-
-  let isDragging = false;
-
-  useEffect(() => {
-    if (groupRef.current && !isDragging) {
-      gsap.to(groupRef.current.rotation, {
-        x: 0,
-        y: 2 * Math.PI,
-        z: 0,
-        duration: 10,
-        repeat: -1,
-        ease: "none",
-      });
-    }
-  }, [groupRef, isDragging]);
 
   const handleClick = (event) => {
     const rect = canvasContainerRef.current.getBoundingClientRect();
@@ -56,32 +57,19 @@ const Model = () => {
 
     if (intersects.length > 0) {
       const mesh = intersects[0];
+      const meshName = mesh.object.material.name;
 
-      switch (mesh.object.material.name) {
-        case "Laces":
-          setSelectedMesh("laces");
-          break;
-        case "Main_Body":
-          setSelectedMesh("mainBody");
-          break;
-        case "Insole":
-          setSelectedMesh("insideSoles");
-          break;
-        case "Sole":
-          setSelectedMesh("soles");
-          break;
-        case "Main_Shoe_Inside":
-          setSelectedMesh("insideBody");
-          break;
-        case "Flap":
-          setSelectedMesh("bigFlop");
-          break;
-        case "Tag":
-          setSelectedMesh("smallFlop");
-          break;
-        default:
-          break;
-      }
+      const selectedMesh = {
+        Laces: "laces",
+        Main_Body: "mainBody",
+        Insole: "insideSoles",
+        Sole: "soles",
+        Main_Shoe_Inside: "insideBody",
+        Flap: "bigFlop",
+        Tag: "smallFlop",
+      }[meshName];
+
+      if (selectedMesh) setSelectedMesh(selectedMesh);
     }
   };
 
@@ -101,7 +89,7 @@ const Model = () => {
       className="w-full h-full flex justify-center items-center"
     >
       <Suspense fallback={<Loader />}>
-        <Canvas shadows className="w-full h-full ">
+        <Canvas shadows className="w-full h-full">
           <ambientLight intensity={0.5} />
           <Environment preset="city" />
 
@@ -111,25 +99,10 @@ const Model = () => {
             ref={cameraRef}
           />
 
-          <AccumulativeShadows
-            temporal
-            frames={60}
-            alphaTest={0.85}
-            scae={10}
-            color="white"
-            position={[0, -0.14, 0]}
-          >
-            <RandomizedLight
-              radius={2}
-              ambient={0.5}
-              position={[10, 5, -15]}
-              bias={0.001}
-            />
-          </AccumulativeShadows>
+          <Shadows />
 
           <group ref={groupRef} position={[0, -0.1, 0]}>
             <Lights />
-
             <ShoeMesh />
           </group>
 

@@ -9,10 +9,16 @@ import ModelContext from "@/libs/ModelContext";
 import { SketchPicker } from "react-color";
 
 export default function Home() {
-  const [isHoverColorButton, setIsHoverColorButton] = useState(null);
-  const [isHoverSketchPicker, setIsHoverSketchPicker] = useState(null);
+  const [isHoverColorButton, setIsHoverColorButton] = useState(false);
+  const [isHoverSketchPicker, setIsHoverSketchPicker] = useState(false);
   const [selectedMesh, setSelectedMesh] = useState("mainBody");
   const [isFull, setIsFull] = useState(false);
+
+  const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    console.log("pickerPosition: ", pickerPosition);
+  }, [pickerPosition]);
 
   const [modelInfo, setModelInfo] = useState({
     mainBody: "#000000",
@@ -57,22 +63,15 @@ export default function Home() {
     }
   };
 
-  function handleMouseOverColorButton(meshName) {
-    setIsHoverColorButton(meshName);
-  }
+  function handleMouseOverButton(e) {
+    const buttonRect = e.target.getBoundingClientRect();
 
-  function handleMouseLeaveColorButton() {
-    if (isHoverSketchPicker === null) {
-      setIsHoverColorButton(null);
-    }
-  }
+    setPickerPosition({
+      top: buttonRect.top,
+      left: buttonRect.right,
+    });
 
-  function handleMouseOverSketchPicker(meshName) {
-    setIsHoverColorButton(meshName);
-  }
-
-  function handleMouseLeaveSketchPicker() {
-    setIsHoverSketchPicker(null);
+    setIsHoverColorButton(true);
   }
 
   return (
@@ -93,7 +92,7 @@ export default function Home() {
         </span>
 
         <div
-          className="relative w-full transition-all duration-300 ease-in-out "
+          className="z-10 relative w-full transition-all duration-300 ease-in-out "
           style={{
             height: isFull ? windowHeight : (windowHeight * 3) / 5,
           }}
@@ -109,7 +108,25 @@ export default function Home() {
         </div>
 
         <div
-          className=" w-full flex justify-between items-center  transition-all duration-300 ease-in-out overflow-hidden"
+          onMouseOver={() => setIsHoverSketchPicker(true)}
+          onMouseLeave={() => setIsHoverSketchPicker(false)}
+          className={`overflow-hidden absolute z-20 -translate-y-[85%] -translate-x-[20%]  ${
+            isHoverSketchPicker || isHoverColorButton ? "w-56 h-94" : "w-0 h-0"
+          }`}
+          style={{
+            transition: "height 0.3s ease, width 0.3s ease",
+            top: pickerPosition.top,
+            left: pickerPosition.left,
+          }}
+        >
+          <SketchPicker
+            color={modelInfo[selectedMesh]}
+            onChange={onChangeMethod}
+          />
+        </div>
+
+        <div
+          className=" w-full flex justify-between items-center  transition-all duration-300 ease-in-out overflow-hidden  "
           style={
             isFull
               ? { height: 0, padding: 0 }
@@ -131,45 +148,35 @@ export default function Home() {
               >
                 <span>{meshName}</span>
                 <div className=" w-full flex justify-center items-center ">
-                  <div className="relative w-24 aspect-square">
-                    <button
-                      key={index}
-                      onMouseOver={() => handleMouseOverColorButton(meshName)}
-                      onMouseLeave={handleMouseLeaveColorButton}
-                      onClick={() => setSelectedMesh(meshName)}
-                      className="w-full h-full py-3 rounded-full border-4 border-transparent  shadow-md shadow-black transition-all duration-200 ease-in-out"
-                      style={
-                        selectedMesh === meshName
-                          ? {
-                              backgroundColor: modelInfo[meshName],
-                              borderColor: "#4a8fff",
-                            }
-                          : { backgroundColor: modelInfo[meshName] }
-                      }
-                    ></button>
-
-                    <div
-                      onMouseOver={() => handleMouseOverSketchPicker(meshName)}
-                      onMouseLeave={handleMouseLeaveSketchPicker}
-                      className={` absolute z-10 right-0 top-0 translate-x-[90%] -translate-y-[90%] overflow-hidden ease-in-out duration-300 transition-all ${
-                        selectedMesh === meshName &&
-                        isHoverColorButton === meshName
-                          ? "w-56 h-94"
-                          : "w-0 h-0"
-                      }`}
-                    >
-                      <SketchPicker
-                        color={modelInfo[selectedMesh]}
-                        onChange={onChangeMethod}
-                      />
-                    </div>
-                  </div>
+                  <button
+                    onMouseOver={(e) =>
+                      selectedMesh === meshName && handleMouseOverButton(e)
+                    }
+                    onMouseLeave={() =>
+                      !isHoverSketchPicker &&
+                      selectedMesh === meshName &&
+                      setIsHoverColorButton(false)
+                    }
+                    onClick={(e) => {
+                      setSelectedMesh(meshName);
+                      handleMouseOverButton(e);
+                    }}
+                    className="w-24 aspect-square py-3 rounded-full border-4 border-transparent  shadow-md shadow-black transition-all duration-200 ease-in-out"
+                    style={
+                      selectedMesh === meshName
+                        ? {
+                            backgroundColor: modelInfo[meshName],
+                            borderColor: "#4a8fff",
+                          }
+                        : { backgroundColor: modelInfo[meshName] }
+                    }
+                  ></button>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="w-2/5 h-full flex justify-between items-center space-x-5">
+          <div className="relative z-10 w-2/5 h-full flex justify-between items-center space-x-5">
             <div className="flex flex-col h-full w-1/2">
               <h1>Upload Texture</h1>
               <DragDrop onDrop={handleDrop} />

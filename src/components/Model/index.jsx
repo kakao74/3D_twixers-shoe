@@ -18,7 +18,7 @@ import Lights from "./_components/Lights";
 import Loader from "./_components/Loader";
 import ShoeMesh from "./_components/ShoeMesh";
 
-const Model = ({ className }) => {
+const Model = () => {
   const { setSelectedMesh } = useContext(ModelContext);
 
   const cameraRef = useRef();

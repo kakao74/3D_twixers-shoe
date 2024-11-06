@@ -1,7 +1,7 @@
 "use client";
 
 import Model from "@/components/Model";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
@@ -9,8 +9,6 @@ import ModelContext from "@/libs/ModelContext";
 import { SketchPicker } from "react-color";
 
 export default function Home() {
-  const sketchPickerRef = useRef();
-
   const [isHoverColorButton, setIsHoverColorButton] = useState(null);
   const [isHoverSketchPicker, setIsHoverSketchPicker] = useState(null);
   const [selectedMesh, setSelectedMesh] = useState("mainBody");
@@ -65,7 +63,7 @@ export default function Home() {
   }
 
   function handleMouseLeaveSketchPicker() {
-    setIsHoverColorButton(null);
+    setIsHoverSketchPicker(null);
   }
 
   return (
@@ -79,7 +77,9 @@ export default function Home() {
         setTextureSettings,
       }}
     >
-      <div className="h-screen w-full flex flex-col justify-between items-center bg-gray-200">
+      <div className="relative h-screen w-full flex flex-col justify-between items-center bg-gray-200">
+        <h1 className="left-12 top-8 absolute text-5xl font-bold  ">Twixers</h1>
+
         <div className="w-full h-3/5 ">
           <Model className=" w-full h-full " />
         </div>
@@ -94,7 +94,10 @@ export default function Home() {
               "bigFlop",
               "laces",
             ].map((meshName, index) => (
-              <div className=" flex flex-col justify-between items-center">
+              <div
+                key={index}
+                className=" flex flex-col justify-between items-center"
+              >
                 <span>{meshName}</span>
                 <div className=" w-full flex justify-center items-center ">
                   <div className="relative w-24 aspect-square">
@@ -103,12 +106,12 @@ export default function Home() {
                       onMouseOver={() => handleMouseOverColorButton(meshName)}
                       onMouseLeave={handleMouseLeaveColorButton}
                       onClick={() => setSelectedMesh(meshName)}
-                      className="w-full h-full py-3 rounded-full border-2 border-transparent  shadow-md shadow-black transition-all duration-200 ease-in-out"
+                      className="w-full h-full py-3 rounded-full border-4 border-transparent  shadow-md shadow-black transition-all duration-200 ease-in-out"
                       style={
                         selectedMesh === meshName
                           ? {
                               backgroundColor: modelInfo[meshName],
-                              borderColor: "skyblue",
+                              borderColor: "#4a8fff",
                             }
                           : { backgroundColor: modelInfo[meshName] }
                       }
@@ -142,47 +145,21 @@ export default function Home() {
             </div>
 
             <div className="w-1/2 flex flex-col justify-between items-center space-y-4 ">
-              <Slider
-                text="xPos"
-                value={textureSettings.xPos}
-                setValue={(value) =>
-                  setTextureSettings((prev) => ({ ...prev, xPos: value }))
-                }
-              />
-              <Slider
-                text="yPos"
-                value={textureSettings.yPos}
-                setValue={(value) =>
-                  setTextureSettings((prev) => ({ ...prev, yPos: value }))
-                }
-              />
-              <Slider
-                text="x rot"
-                value={textureSettings.xRotation}
-                setValue={(value) =>
-                  setTextureSettings((prev) => ({
-                    ...prev,
-                    xRotation: value,
-                  }))
-                }
-              />
-              <Slider
-                text="y rot"
-                value={textureSettings.yRotation}
-                setValue={(value) =>
-                  setTextureSettings((prev) => ({
-                    ...prev,
-                    yRotation: value,
-                  }))
-                }
-              />
-              <Slider
-                text="scale"
-                value={textureSettings.scale}
-                setValue={(value) =>
-                  setTextureSettings((prev) => ({ ...prev, scale: value }))
-                }
-              />
+              {["xPos", "yPos", "xRotation", "yRotation", "scale"].map(
+                (slider, index) => (
+                  <Slider
+                    key={index}
+                    text={slider.slice(0, 4)}
+                    value={textureSettings[slider]}
+                    setValue={(value) =>
+                      setTextureSettings((prev) => ({
+                        ...prev,
+                        [slider]: value,
+                      }))
+                    }
+                  />
+                )
+              )}
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const DragDrop = ({ onDrop, className }) => {
+const DragDrop = ({ onDrop }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (event) => {

@@ -63,11 +63,7 @@ const DragDrop = ({ onDrop }) => {
         <p>Drag and drop files here, or click to select files</p>
       )}
 
-      <div
-        className={`w-full bg-gray-200 opacity-65  rounded-lg transition-all ease-in-out duration-300 ${
-          isDragging ? "h-32" : "h-0"
-        }`}
-      ></div>
+      <div className="w-full bg-gray-200 opacity-65 rounded-lg "></div>
     </div>
   );
 };

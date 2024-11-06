@@ -34,21 +34,13 @@ export default function Home() {
     url: "",
   });
 
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-  console.log("window height: ", window.innerHeight);
+  const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
-    const handleResize = () => {
+    if (typeof window !== "undefined") {
       setWindowHeight(window.innerHeight);
-    };
-
-    // Set up event listener
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup listener on component unmount
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    }
+  });
 
   const onChangeMethod = (color) => {
     setModelInfo((prev) => ({
@@ -178,7 +170,7 @@ export default function Home() {
           </div>
 
           <div className="w-2/5 h-full flex justify-between items-center space-x-5">
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full w-1/2">
               <h1>Upload Texture</h1>
               <DragDrop onDrop={handleDrop} />
             </div>

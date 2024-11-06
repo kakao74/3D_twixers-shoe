@@ -1,7 +1,6 @@
-
 # Twixers
 
-Twixers is a 3D model customization tool that allows users to interactively modify the appearance of 3D meshes. Users can change mesh colors and add textures, offering a simple, intuitive interface for model personalization.
+Twixers is a 3D shoe customization tool that allows users to create their own personal shoe design. Users can change mesh colors and add textures, offering a simple, intuitive interface for model personalization.
 
 ## Features
 
@@ -14,19 +13,22 @@ Twixers is a 3D model customization tool that allows users to interactively modi
 To use Twixers, follow these steps:
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/alijalloul/twixers.git
    cd twixers
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Run the App**
+
    ```bash
-   npm start
+   npm run dev
    ```
 
 4. Open your browser and go to [http://localhost:3000](http://localhost:3000) to interact with Twixers.
@@ -34,9 +36,11 @@ To use Twixers, follow these steps:
 ## Usage Instructions
 
 1. **Select a Mesh**:
+
    - Click directly on the mesh in the canvas to select it.
 
 2. **Change Mesh Color**:
+
    - Click one of the colored circles in the bottom left corner of the interface.
    - Hover over the selected circle to open the color picker.
    - Choose a new color to apply it to the selected mesh.

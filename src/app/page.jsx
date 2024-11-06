@@ -101,7 +101,7 @@ export default function Home() {
           <Model className=" w-full h-full " />
 
           <button
-            className="rounded-t-lg bg-gray-300 w-24 flex justify-center items-center absolute left-1/2 -translate-y-full border border-b-0 border-black hover:bg-gray-400 transition-all duration-400"
+            className="rounded-t-lg bg-gray-300 w-24 flex justify-center items-center absolute left-1/2 -translate-x-1/2 -translate-y-full border border-b-0 border-black hover:bg-gray-400 transition-all duration-400"
             onClick={() => setIsFull(!isFull)}
           >
             {isFull ? "Show" : "Hide"}

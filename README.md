@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+# Twixers
+
+Twixers is a 3D model customization tool that allows users to interactively modify the appearance of 3D meshes. Users can change mesh colors and add textures, offering a simple, intuitive interface for model personalization.
+
+## Features
+
+- **Mesh Selection**: Click on the canvas to select a mesh to modify.
+- **Color Picker**: Choose colors for selected meshes by clicking the color circles in the bottom left corner.
+- **Texture Upload**: Add custom textures to your model by uploading an image file.
 
 ## Getting Started
 
-First, run the development server:
+To use Twixers, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/alijalloul/twixers.git
+   cd twixers
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run the App**
+   ```bash
+   npm start
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open your browser and go to [http://localhost:3000](http://localhost:3000) to interact with Twixers.
 
-## Learn More
+## Usage Instructions
 
-To learn more about Next.js, take a look at the following resources:
+1. **Select a Mesh**:
+   - Click directly on the mesh in the canvas to select it.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Change Mesh Color**:
+   - Click one of the colored circles in the bottom left corner of the interface.
+   - Hover over the selected circle to open the color picker.
+   - Choose a new color to apply it to the selected mesh.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Add Texture**:
+   - Either click on the input under "Upload Texture" to choose an image file, or drag an image into the designated box.
+   - The uploaded texture will be applied to the selected mesh.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are welcome.

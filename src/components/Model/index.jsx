@@ -34,6 +34,8 @@ const Shadows = memo(() => (
   </AccumulativeShadows>
 ));
 
+Shadows.displayName = "shadows";
+
 const Model = () => {
   const { setSelectedMesh } = useContext(ModelContext);
 
@@ -80,7 +82,7 @@ const Model = () => {
     return () => {
       canvasContainer.removeEventListener("click", handleClick);
     };
-  }, [canvasContainerRef]);
+  }, []);
 
   return (
     <div

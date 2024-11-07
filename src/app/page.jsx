@@ -46,7 +46,7 @@ export default function Home() {
     if (typeof window !== "undefined") {
       setWindowHeight(window.innerHeight);
     }
-  });
+  }, []);
 
   const onChangeMethod = (color) => {
     setModelInfo((prev) => ({

@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 import "./globals.css";
 
 export const metadata = {
@@ -8,6 +10,20 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          strategy="lazyOnload"
+          src="https://www.googletagmanager.com/gtag/js?id=G-897K03VZG5"
+        ></Script>
+        <Script id="" strategy="lazyOnload">
+          {`  window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-897K03VZG5');`}
+        </Script>
+      </head>
+
       <body className="max-h-screen flex justify-center items-stretch ">
         {children}
       </body>

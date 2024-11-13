@@ -1,7 +1,7 @@
 "use client";
 
 import Model from "@/components/Model";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
@@ -17,10 +17,6 @@ export default function Home() {
     typeof window !== "undefined" ? window.innerWidth < 650 : false;
 
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    console.log("pickerPosition: ", pickerPosition);
-  }, [pickerPosition]);
 
   const [modelInfo, setModelInfo] = useState({
     mainBody: "#000000",
@@ -121,6 +117,7 @@ export default function Home() {
             transition: "height 0.3s ease, width 0.3s ease",
             top: pickerPosition.top,
             left: pickerPosition.left,
+            touchAction: "none",
           }}
         >
           <SketchPicker

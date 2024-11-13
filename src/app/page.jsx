@@ -13,9 +13,8 @@ export default function Home() {
   const [isHoverSketchPicker, setIsHoverSketchPicker] = useState(false);
   const [selectedMesh, setSelectedMesh] = useState("mainBody");
   const [isFull, setIsFull] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 650 : false
-  );
+  const isSmallScreen =
+    typeof window !== "undefined" ? window.innerWidth < 650 : false;
 
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
 

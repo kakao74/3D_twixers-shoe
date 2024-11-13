@@ -8,7 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
-
+      screens: {
+        "sm": { "max": "640px" },
+        "md": { "max": "1024px" },
+      },
     },
   },
   plugins: [],

@@ -24,7 +24,7 @@ gtag('config', 'G-897K03VZG5');`}
         </Script>
       </head>
 
-      <body className="max-h-screen flex justify-center items-stretch ">
+      <body className="min-h-screen flex justify-center items-stretch ">
         {children}
       </body>
     </html>

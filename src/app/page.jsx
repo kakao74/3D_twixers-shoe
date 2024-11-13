@@ -13,6 +13,9 @@ export default function Home() {
   const [isHoverSketchPicker, setIsHoverSketchPicker] = useState(false);
   const [selectedMesh, setSelectedMesh] = useState("mainBody");
   const [isFull, setIsFull] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 650 : false
+  );
 
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
 
@@ -71,7 +74,7 @@ export default function Home() {
       left: buttonRect.right,
     });
 
-    setIsHoverColorButton(true);
+    setIsHoverColorButton(!isHoverColorButton);
   }
 
   return (
@@ -85,9 +88,11 @@ export default function Home() {
         setTextureSettings,
       }}
     >
-      <div className="relative h-screen w-full flex flex-col justify-between items-center bg-gray-200">
-        <h1 className="left-12 top-8 absolute text-5xl font-bold  ">Twixers</h1>
-        <span className="right-12 top-8 absolute text-lg w-72">
+      <div className="relative min-h-screen w-full flex flex-col justify-between items-center bg-gray-200 sm:overflow-y-scroll">
+        <h1 className="left-12 top-8 absolute text-5xl font-bold sm:left-5  ">
+          Twixers
+        </h1>
+        <span className="right-12 top-8 absolute text-lg w-72 sm:right-5 sm:w-32">
           This model is the work of 0marvin-schimanski0 from cgtrader.com
         </span>
 
@@ -126,14 +131,16 @@ export default function Home() {
         </div>
 
         <div
-          className=" w-full flex justify-between items-center  transition-all duration-300 ease-in-out overflow-hidden  "
+          className=" w-full flex justify-between items-center overflow-hidden  transition-all duration-300 ease-in-out sm:flex-col sm:space-y-4  "
           style={
             isFull
               ? { height: 0, padding: 0 }
+              : isSmallScreen
+              ? { height: windowHeight, padding: 20 }
               : { height: (windowHeight * 2) / 5, padding: 20 }
           }
         >
-          <div className="w-2/5 grid grid-cols-3 gap-x-2 gap-y-8">
+          <div className="w-2/5 grid grid-cols-3 gap-x-2 gap-y-8  sm:w-full sm:h-1/2">
             {[
               "mainBody",
               "insideBody",
@@ -144,7 +151,7 @@ export default function Home() {
             ].map((meshName, index) => (
               <div
                 key={index}
-                className=" flex flex-col justify-between items-center"
+                className=" flex flex-col justify-center items-center"
               >
                 <span>{meshName}</span>
                 <div className=" w-full flex justify-center items-center ">
@@ -176,13 +183,13 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="relative z-10 w-2/5 h-full flex justify-between items-center space-x-5">
-            <div className="flex flex-col h-full w-1/2">
+          <div className="relative z-10 w-2/5 h-full flex justify-between items-center space-x-5 sm:w-full sm:h-1/2 sm:flex-col sm:space-y-4">
+            <div className="flex flex-col h-full w-1/2 sm:w-full">
               <h1>Upload Texture</h1>
               <DragDrop onDrop={handleDrop} />
             </div>
 
-            <div className="w-1/2 flex flex-col justify-between items-center space-y-4 ">
+            <div className="w-1/2 flex flex-col justify-between items-center space-y-4  sm:w-full">
               {["xPos", "yPos", "xRotation", "yRotation", "scale"].map(
                 (slider, index) => (
                   <Slider

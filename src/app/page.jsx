@@ -1,7 +1,7 @@
 "use client";
 
 import Model from "@/components/Model";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";

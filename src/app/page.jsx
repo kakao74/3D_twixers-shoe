@@ -72,6 +72,13 @@ export default function Home() {
     setIsHoverColorButton(!isHoverColorButton);
   }
 
+  const isSmol =
+    typeof window !== undefined
+      ? window.innerWidth < 641
+        ? true
+        : false
+      : false;
+
   return (
     <ModelContext.Provider
       value={{
@@ -111,6 +118,13 @@ export default function Home() {
           onMouseOver={() => setIsHoverSketchPicker(true)}
           onMouseLeave={() => setIsHoverSketchPicker(false)}
           className={`overflow-hidden absolute z-20 -translate-y-[85%] -translate-x-[20%]  ${
+            isSmol &&
+            (selectedMesh === "mainBody" || selectedMesh === "insideSoles"
+              ? "-translate-x-[20%]"
+              : selectedMesh === "insideBody" || selectedMesh === "bigFlop"
+              ? "-translate-x-[70%]"
+              : "-translate-x-[120%]")
+          } ${
             isHoverSketchPicker || isHoverColorButton ? "w-56 h-94" : "w-0 h-0"
           }`}
           style={{

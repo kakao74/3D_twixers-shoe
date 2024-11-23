@@ -118,8 +118,8 @@ export default function Home() {
               ? "!-translate-x-[70%]"
               : (selectedMesh === "soles" || selectedMesh === "laces") &&
                 "!-translate-x-[120%]")
-          } ${
-            isHoverSketchPicker || isHoverColorButton ? "w-56 h-94" : "w-0 h-0"
+          } ${isSmallScreen && "-translate-y-[40%]"} ${
+            isHoverSketchPicker || isHoverColorButton ? "w-[220px]" : "w-0"
           }`}
           style={{
             transition: "height 0.3s ease, width 0.3s ease",

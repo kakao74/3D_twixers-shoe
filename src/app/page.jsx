@@ -110,14 +110,14 @@ export default function Home() {
         <div
           onMouseOver={() => setIsHoverSketchPicker(true)}
           onMouseLeave={() => setIsHoverSketchPicker(false)}
-          className={`overflow-hidden absolute z-20 -translate-y-[85%]   ${
+          className={`overflow-hidden absolute z-20 -translate-y-[85%] -translate-x-[20%]   ${
             isSmallScreen &&
             (selectedMesh === "mainBody" || selectedMesh === "insideSoles"
-              ? "-translate-x-[20%]"
+              ? "!-translate-x-[20%]"
               : selectedMesh === "insideBody" || selectedMesh === "bigFlop"
-              ? "-translate-x-[70%]"
+              ? "!-translate-x-[70%]"
               : (selectedMesh === "soles" || selectedMesh === "laces") &&
-                "-translate-x-[120%]")
+                "!-translate-x-[120%]")
           } ${
             isHoverSketchPicker || isHoverColorButton ? "w-56 h-94" : "w-0 h-0"
           }`}

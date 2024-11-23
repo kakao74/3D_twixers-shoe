@@ -118,7 +118,7 @@ export default function Home() {
               ? "!-translate-x-[70%]"
               : (selectedMesh === "soles" || selectedMesh === "laces") &&
                 "!-translate-x-[120%]")
-          } ${isSmallScreen && "-translate-y-[40%]"} ${
+          } ${isSmallScreen && "!-translate-y-[40%]"} ${
             isHoverSketchPicker || isHoverColorButton ? "w-[220px]" : "w-0"
           }`}
           style={{

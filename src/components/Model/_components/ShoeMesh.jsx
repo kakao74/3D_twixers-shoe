@@ -39,8 +39,11 @@ const ShoeMesh = () => {
 
   const mainBodyNode = useRef(scene.getObjectByName("Plane040_2"));
 
+  const isSmall =
+    typeof window !== undefined && window.innerWidth < 640 ? true : false;
+
   return (
-    <group dispose={null}>
+    <group dispose={null} scale={isSmall ? 0.6 : 1}>
       <primitive object={scene} />
 
       {mainBodyNode && decalTexture && (

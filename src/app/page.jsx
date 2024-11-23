@@ -155,7 +155,7 @@ export default function Home() {
             ].map((meshName, index) => (
               <div
                 key={index}
-                className=" flex flex-col justify-center items-center"
+                className=" flex flex-col justify-center items-center "
               >
                 <span>{meshName}</span>
                 <div className=" w-full flex justify-center items-center ">

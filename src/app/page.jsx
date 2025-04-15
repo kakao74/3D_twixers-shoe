@@ -84,12 +84,7 @@ export default function Home() {
       }}
     >
       <div className="relative min-h-screen w-full flex flex-col justify-between items-center bg-gray-200 sm:overflow-y-scroll">
-        <h1 className="left-12 top-8 absolute text-5xl font-bold sm:left-5  ">
-          Twixers
-        </h1>
-        <span className="right-12 top-8 absolute text-lg w-72 sm:right-5 sm:w-32">
-          This model is the work of 0marvin-schimanski0 from cgtrader.com
-        </span>
+        
 
         <div
           className="z-10 relative w-full transition-all duration-300 ease-in-out "

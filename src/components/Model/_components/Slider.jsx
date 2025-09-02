@@ -1,7 +1,7 @@
 "use client";
 
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 const Slider = ({ text, value, setValue }) => {
   const [isDown, setIsDown] = useState(false);
@@ -10,19 +10,19 @@ const Slider = ({ text, value, setValue }) => {
   const [pos, setPos] = useState(0);
   const intervalFactor = 4;
 
-  useEffect(() => {
-    const rect = dotRef.current.parentElement.getBoundingClientRect();
-    setPos((rect.width * (intervalFactor * value + 1)) / 2);
-  }, [dotRef]);
-
-  function handleMouseMove(e) {
+  const handleMouseMove = useCallback((e) => {
     if (!isDown) return;
     const rect = dotRef.current.parentElement.getBoundingClientRect();
     const newValue = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
 
     setValue(((newValue * 2) / rect.width - 1) / intervalFactor);
     setPos(newValue);
-  }
+  }, [isDown, setValue, intervalFactor]);
+
+  useEffect(() => {
+    const rect = dotRef.current.parentElement.getBoundingClientRect();
+    setPos((rect.width * (intervalFactor * value + 1)) / 2);
+  }, [value, intervalFactor]);
 
   useEffect(() => {
     function handleMouseUp() {
@@ -57,6 +57,7 @@ const Slider = ({ text, value, setValue }) => {
       yPos: "Y Position", 
       xRot: "X Rotation",
       yRot: "Y Rotation",
+      zRot: "Z Rotation",
       scal: "Scale"
     };
     return labels[text] || text;

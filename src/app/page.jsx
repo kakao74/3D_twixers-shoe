@@ -1,7 +1,7 @@
 "use client";
 
 import Model from "@/components/Model";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
 import ModelContext from "@/libs/ModelContext";
@@ -33,17 +33,10 @@ export default function Home() {
     yPos: 0.05,
     xRotation: 0,
     yRotation: 0,
+    zRotation: 0,
     scale: 0.15,
     url: "",
   });
-
-  const [windowHeight, setWindowHeight] = useState(0);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setWindowHeight(window.innerHeight);
-    }
-  }, []);
 
   const onChangeMethod = (color) => {
     setModelInfo((prev) => ({
@@ -124,14 +117,43 @@ export default function Home() {
           {/* Controls Section - Full Height with Proper Distribution */}
           {!isFull && (
             <div className="lg:w-1/3 h-full flex flex-col slide-up gap-3" style={{ animationDelay: "0.1s" }}>
-              {/* Color Picker - Ultra Compact */}
+              {/* Color Picker - Ultra Compact with 3 in a line */}
               <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-shrink-0">
                 <h2 className="text-sm font-semibold mb-2 text-blue-400 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
                   Color Customization
                 </h2>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(meshLabels).map(([meshName, label]) => (
+                <div className="grid grid-cols-3 gap-2">
+                  {Object.entries(meshLabels).slice(0, 3).map(([meshName, label]) => (
+                    <div key={meshName} className="flex flex-col items-center space-y-1">
+                      <span className="text-xs text-white/70 font-medium text-center leading-tight">{label}</span>
+                      <button
+                        onMouseOver={(e) =>
+                          selectedMesh === meshName && handleMouseOverButton(e)
+                        }
+                        onMouseLeave={() =>
+                          !isHoverSketchPicker &&
+                          selectedMesh === meshName &&
+                          setIsHoverColorButton(false)
+                        }
+                        onClick={(e) => {
+                          setSelectedMesh(meshName);
+                          handleMouseOverButton(e);
+                        }}
+                        className={`color-picker-button w-10 h-10 ${
+                          selectedMesh === meshName ? "selected" : ""
+                        }`}
+                        style={{ backgroundColor: modelInfo[meshName] }}
+                      >
+                        {selectedMesh === meshName && (
+                          <div className="absolute inset-0 bg-white/20 rounded-xl" />
+                        )}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  {Object.entries(meshLabels).slice(3, 6).map(([meshName, label]) => (
                     <div key={meshName} className="flex flex-col items-center space-y-1">
                       <span className="text-xs text-white/70 font-medium text-center leading-tight">{label}</span>
                       <button
@@ -161,25 +183,25 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Texture Upload - Ultra Compact */}
-              <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
+              {/* Texture Upload - Reduced Height */}
+              <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-shrink-0">
                 <h2 className="text-sm font-semibold mb-2 text-purple-400 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
                   Texture Upload
                 </h2>
-                <div className="flex-1 flex items-center justify-center">
+                <div className="h-24">
                   <DragDrop onDrop={handleDrop} />
                 </div>
               </div>
 
-              {/* Texture Controls - Ultra Compact */}
+              {/* Texture Controls - Ultra Compact with Z Rotation */}
               <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
                 <h2 className="text-sm font-semibold mb-2 text-green-400 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
                   Texture Controls
                 </h2>
                 <div className="flex-1 space-y-2 flex flex-col justify-center">
-                  {["xPos", "yPos", "xRotation", "yRotation", "scale"].map(
+                  {["xPos", "yPos", "xRotation", "yRotation", "zRotation", "scale"].map(
                     (slider, index) => (
                       <Slider
                         key={index}

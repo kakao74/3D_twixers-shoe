@@ -1,26 +1,22 @@
 "use client";
 
-import {
-  AccumulativeShadows,
-  Environment,
-  OrbitControls,
-  PerspectiveCamera,
-  RandomizedLight,
-} from "@react-three/drei";
+import { Suspense, useContext, useEffect, useRef, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
-import { memo, Suspense, useContext, useEffect, useRef } from "react";
+import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
+import { AccumulativeShadows, RandomizedLight } from "@react-three/drei";
 import * as THREE from "three";
 
-import ModelContext from "@/libs/ModelContext";
+import ShoeMesh from "./_components/ShoeMesh";
 import Lights from "./_components/Lights";
 import Loader from "./_components/Loader";
-import ShoeMesh from "./_components/ShoeMesh";
+import ModelContext from "@/libs/ModelContext";
 
-const Shadows = memo(() => (
+const Shadows = () => (
   <AccumulativeShadows
     temporal
     frames={60}
     alphaTest={0.85}
+    opacity={0.8}
     scale={10}
     color="white"
     position={[0, -0.14, 0]}
@@ -32,7 +28,7 @@ const Shadows = memo(() => (
       bias={0.001}
     />
   </AccumulativeShadows>
-));
+);
 
 Shadows.displayName = "shadows";
 
@@ -44,12 +40,13 @@ const Model = () => {
   const canvasContainerRef = useRef(null);
 
   const raycaster = useRef(new THREE.Raycaster());
-  const mouse = { x: 0, y: 0 };
 
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     const rect = canvasContainerRef.current.getBoundingClientRect();
-    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    const mouse = {
+      x: ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      y: -((event.clientY - rect.top) / rect.height) * 2 + 1
+    };
 
     raycaster.current.setFromCamera(mouse, cameraRef.current);
 
@@ -73,7 +70,7 @@ const Model = () => {
 
       if (selectedMesh) setSelectedMesh(selectedMesh);
     }
-  };
+  }, [setSelectedMesh]);
 
   useEffect(() => {
     const canvasContainer = canvasContainerRef.current;
@@ -82,7 +79,7 @@ const Model = () => {
     return () => {
       canvasContainer.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [handleClick]);
 
   return (
     <div

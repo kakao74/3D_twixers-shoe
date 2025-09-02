@@ -10,7 +10,7 @@ const ShoeMesh = () => {
   const { scene, materials } = useGLTF("/models/shoe.glb");
 
   const decalTexture = useTexture(
-    textureSettings.url ? textureSettings.url : "/cactus.png"
+    textureSettings.url ? textureSettings.url : "/vecteezy_modern-travel-agency-logo-with-an-airplane-icon-vibrant_60422200.png"
   );
 
   // Apply material colors based on modelInfo

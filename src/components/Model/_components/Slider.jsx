@@ -51,15 +51,52 @@ const Slider = ({ text, value, setValue }) => {
     });
   }, [pos]);
 
+  const getSliderLabel = (text) => {
+    const labels = {
+      xPos: "X Position",
+      yPos: "Y Position", 
+      xRot: "X Rotation",
+      yRot: "Y Rotation",
+      scal: "Scale"
+    };
+    return labels[text] || text;
+  };
+
   return (
-    <div className="w-full flex justify-between items-center">
-      <span className="mr-2 text-base">{text}</span>
-      <div className="relative flex-1  h-2 bg-gray-300 rounded-xl flex justify-center items-center">
+    <div className="w-full space-y-1">
+      <div className="flex justify-between items-center">
+        <span className="text-xs font-medium text-white/80">{getSliderLabel(text)}</span>
+        <span className="text-xs text-white/50 font-mono bg-white/5 px-1.5 py-0.5 rounded">
+          {value.toFixed(3)}
+        </span>
+      </div>
+      
+      <div className="relative h-1.5 bg-white/10 rounded-full overflow-hidden">
+        {/* Background track */}
+        <div className="absolute inset-0 bg-white/5 rounded-full" />
+        
+        {/* Active track */}
+        <div 
+          className="absolute inset-y-0 left-0 rounded-full transition-all duration-200"
+          style={{ 
+            width: `${((value + 1/intervalFactor) / (2/intervalFactor)) * 100}%`,
+            background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)'
+          }}
+        />
+        
+        {/* Slider handle */}
         <div
           ref={dotRef}
           onMouseDown={() => setIsDown(true)}
-          className="dot absolute rounded-full w-5 aspect-square -translate-x-1/2 bg-gray-500 cursor-pointer"
-        ></div>
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-lg cursor-pointer border-2 border-white/20 hover:scale-110 transition-transform duration-200"
+          style={{ 
+            transform: `translate(-50%, -50%)`,
+            left: `${pos}px`
+          }}
+        >
+          {/* Inner glow */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white to-white/80" />
+        </div>
       </div>
     </div>
   );

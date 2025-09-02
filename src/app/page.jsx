@@ -2,7 +2,6 @@
 
 import Model from "@/components/Model";
 import { useEffect, useState } from "react";
-
 import DragDrop from "@/components/DragDrop";
 import Slider from "@/components/Model/_components/Slider";
 import ModelContext from "@/libs/ModelContext";
@@ -14,7 +13,7 @@ export default function Home() {
   const [selectedMesh, setSelectedMesh] = useState("mainBody");
   const [isFull, setIsFull] = useState(false);
   const isSmallScreen =
-    typeof window !== "undefined" ? window.innerWidth < 650 : false;
+    typeof window !== "undefined" ? window.innerWidth < 768 : false;
 
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
 
@@ -63,14 +62,21 @@ export default function Home() {
 
   function handleMouseOverButton(e) {
     const buttonRect = e.target.getBoundingClientRect();
-
     setPickerPosition({
       top: buttonRect.top,
       left: buttonRect.right,
     });
-
     setIsHoverColorButton(!isHoverColorButton);
   }
+
+  const meshLabels = {
+    mainBody: "Main Body",
+    insideBody: "Inside Body",
+    soles: "Soles",
+    insideSoles: "Inside Soles",
+    bigFlop: "Big Flop",
+    laces: "Laces",
+  };
 
   return (
     <ModelContext.Provider
@@ -83,128 +89,135 @@ export default function Home() {
         setTextureSettings,
       }}
     >
-      <div className="relative min-h-screen w-full flex flex-col justify-between items-center bg-gray-200 sm:overflow-y-scroll">
-        
+      <div className="h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="w-full p-3 border-b border-white/10 fade-in flex-shrink-0">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              3D Shoe Customizer
+            </h1>
+            <button
+              className="glass-button flex items-center gap-2 hover:scale-105 transition-transform duration-200 text-xs px-2 py-1"
+              onClick={() => setIsFull(!isFull)}
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              {isFull ? "Show Controls" : "Hide Controls"}
+            </button>
+          </div>
+        </header>
 
-        <div
-          className="z-10 relative w-full transition-all duration-300 ease-in-out "
-          style={{
-            height: isFull ? windowHeight : (windowHeight * 3) / 5,
-          }}
-        >
-          <Model className=" w-full h-full " />
-
-          <button
-            className="rounded-t-lg bg-gray-300 w-24 flex justify-center items-center absolute left-1/2 -translate-x-1/2 -translate-y-full border border-b-0 border-gray-400 hover:bg-gray-400 transition-all duration-400"
-            onClick={() => setIsFull(!isFull)}
+        {/* Main Content - Full Height */}
+        <div className="flex-1 flex flex-col lg:flex-row gap-3 p-3 min-h-0">
+          {/* 3D Model Section - Full Height */}
+          <div
+            className={`relative transition-all duration-500 ease-in-out slide-up flex-1 ${
+              isFull ? "lg:w-full" : "lg:w-2/3"
+            }`}
           >
-            {isFull ? "Show" : "Hide"}
-          </button>
+            <div className="w-full h-full rounded-xl overflow-hidden glass-card hover:shadow-2xl transition-shadow duration-300">
+              <Model className="w-full h-full" />
+            </div>
+          </div>
+
+          {/* Controls Section - Full Height with Proper Distribution */}
+          {!isFull && (
+            <div className="lg:w-1/3 h-full flex flex-col slide-up gap-3" style={{ animationDelay: "0.1s" }}>
+              {/* Color Picker - Ultra Compact */}
+              <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-shrink-0">
+                <h2 className="text-sm font-semibold mb-2 text-blue-400 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+                  Color Customization
+                </h2>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.entries(meshLabels).map(([meshName, label]) => (
+                    <div key={meshName} className="flex flex-col items-center space-y-1">
+                      <span className="text-xs text-white/70 font-medium text-center leading-tight">{label}</span>
+                      <button
+                        onMouseOver={(e) =>
+                          selectedMesh === meshName && handleMouseOverButton(e)
+                        }
+                        onMouseLeave={() =>
+                          !isHoverSketchPicker &&
+                          selectedMesh === meshName &&
+                          setIsHoverColorButton(false)
+                        }
+                        onClick={(e) => {
+                          setSelectedMesh(meshName);
+                          handleMouseOverButton(e);
+                        }}
+                        className={`color-picker-button w-10 h-10 ${
+                          selectedMesh === meshName ? "selected" : ""
+                        }`}
+                        style={{ backgroundColor: modelInfo[meshName] }}
+                      >
+                        {selectedMesh === meshName && (
+                          <div className="absolute inset-0 bg-white/20 rounded-xl" />
+                        )}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Texture Upload - Ultra Compact */}
+              <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
+                <h2 className="text-sm font-semibold mb-2 text-purple-400 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+                  Texture Upload
+                </h2>
+                <div className="flex-1 flex items-center justify-center">
+                  <DragDrop onDrop={handleDrop} />
+                </div>
+              </div>
+
+              {/* Texture Controls - Ultra Compact */}
+              <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
+                <h2 className="text-sm font-semibold mb-2 text-green-400 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                  Texture Controls
+                </h2>
+                <div className="flex-1 space-y-2 flex flex-col justify-center">
+                  {["xPos", "yPos", "xRotation", "yRotation", "scale"].map(
+                    (slider, index) => (
+                      <Slider
+                        key={index}
+                        text={slider.slice(0, 4)}
+                        value={textureSettings[slider]}
+                        setValue={(value) =>
+                          setTextureSettings((prev) => ({
+                            ...prev,
+                            [slider]: value,
+                          }))
+                        }
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Color Picker Popup */}
         <div
           onMouseOver={() => setIsHoverSketchPicker(true)}
           onMouseLeave={() => setIsHoverSketchPicker(false)}
-          className={`overflow-hidden absolute z-20 -translate-y-[85%] -translate-x-[20%]   ${
-            isSmallScreen &&
-            (selectedMesh === "mainBody" || selectedMesh === "insideSoles"
-              ? "!-translate-x-[20%]"
-              : selectedMesh === "insideBody" || selectedMesh === "bigFlop"
-              ? "!-translate-x-[70%]"
-              : (selectedMesh === "soles" || selectedMesh === "laces") &&
-                "!-translate-x-[120%]")
-          } ${isSmallScreen && "!-translate-y-[40%]"} ${
-            isHoverSketchPicker || isHoverColorButton ? "w-[220px]" : "w-0"
+          className={`fixed z-50 transition-all duration-300 ease-in-out ${
+            isHoverSketchPicker || isHoverColorButton ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
           }`}
           style={{
-            transition: "height 0.3s ease, width 0.3s ease",
             top: pickerPosition.top,
             left: pickerPosition.left,
-            touchAction: "none",
+            transform: `translate(${isSmallScreen ? "-50%" : "0%"}, -50%)`,
           }}
         >
-          <SketchPicker
-            color={modelInfo[selectedMesh]}
-            onChange={onChangeMethod}
-          />
-        </div>
-
-        <div
-          className=" w-full flex justify-between items-center overflow-hidden  transition-all duration-300 ease-in-out sm:flex-col sm:space-y-4  "
-          style={
-            isFull
-              ? { height: 0, padding: 0 }
-              : isSmallScreen
-              ? { height: windowHeight, padding: 20 }
-              : { height: (windowHeight * 2) / 5, padding: 20 }
-          }
-        >
-          <div className="w-2/5 grid grid-cols-3 gap-x-2 gap-y-8  sm:w-full sm:h-1/2">
-            {[
-              "mainBody",
-              "insideBody",
-              "soles",
-              "insideSoles",
-              "bigFlop",
-              "laces",
-            ].map((meshName, index) => (
-              <div
-                key={index}
-                className=" flex flex-col justify-center items-center "
-              >
-                <span>{meshName}</span>
-                <div className=" w-full flex justify-center items-center ">
-                  <button
-                    onMouseOver={(e) =>
-                      selectedMesh === meshName && handleMouseOverButton(e)
-                    }
-                    onMouseLeave={() =>
-                      !isHoverSketchPicker &&
-                      selectedMesh === meshName &&
-                      setIsHoverColorButton(false)
-                    }
-                    onClick={(e) => {
-                      setSelectedMesh(meshName);
-                      handleMouseOverButton(e);
-                    }}
-                    className="w-24 aspect-square py-3 rounded-full border-4 border-transparent  shadow-md shadow-black transition-all duration-200 ease-in-out"
-                    style={
-                      selectedMesh === meshName
-                        ? {
-                            backgroundColor: modelInfo[meshName],
-                            borderColor: "#4a8fff",
-                          }
-                        : { backgroundColor: modelInfo[meshName] }
-                    }
-                  ></button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="relative z-10 w-2/5 h-full flex justify-between items-center space-x-5 sm:w-full sm:h-1/2 sm:flex-col sm:space-y-4">
-            <div className="flex flex-col h-full w-1/2 sm:w-full">
-              <h1>Upload Texture</h1>
-              <DragDrop onDrop={handleDrop} />
-            </div>
-
-            <div className="w-1/2 flex flex-col justify-between items-center space-y-4  sm:w-full">
-              {["xPos", "yPos", "xRotation", "yRotation", "scale"].map(
-                (slider, index) => (
-                  <Slider
-                    key={index}
-                    text={slider.slice(0, 4)}
-                    value={textureSettings[slider]}
-                    setValue={(value) =>
-                      setTextureSettings((prev) => ({
-                        ...prev,
-                        [slider]: value,
-                      }))
-                    }
-                  />
-                )
-              )}
-            </div>
+          <div className="glass-card p-2">
+            <SketchPicker
+              color={modelInfo[selectedMesh]}
+              onChange={onChangeMethod}
+            />
           </div>
         </div>
       </div>

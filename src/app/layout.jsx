@@ -1,9 +1,11 @@
 import Script from "next/script";
-
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({ subsets: ["latin"] });
+
 export const metadata = {
-  title: "Twixers",
+  title: "3D Shoe Customizer - Twixers",
   description:
     "Twixers is a 3D shoe customization tool that allows users to create their own personal shoe design. Users can change mesh colors and add textures, offering a simple, intuitive interface for model personalization.",
 };
@@ -25,7 +27,7 @@ gtag('config', 'G-897K03VZG5');`}
         </Script>
       </head>
 
-      <body className="min-h-screen flex justify-center items-stretch ">
+      <body className={`${inter.className} min-h-screen`}>
         {children}
       </body>
     </html>

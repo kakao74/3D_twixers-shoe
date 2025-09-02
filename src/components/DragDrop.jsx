@@ -33,9 +33,9 @@ const DragDrop = ({ onDrop }) => {
   };
 
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files || []); // Ensure files is an array
+    const files = Array.from(event.target.files || []);
     if (onDrop) {
-      onDrop(files); // Call the onDrop prop function with the selected files
+      onDrop(files);
     }
   };
 
@@ -45,10 +45,9 @@ const DragDrop = ({ onDrop }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleClick}
-      className={`flex-1 text-center w-full border-2 p-4 cursor-pointer transition-all ${
-        isDragging ? "border-blue-500" : "border-gray-400"
+      className={`upload-zone w-full h-full flex items-center justify-center ${
+        isDragging ? "dragging" : ""
       }`}
-      style={{ borderStyle: "dashed" }}
     >
       <input
         type="file"
@@ -57,13 +56,31 @@ const DragDrop = ({ onDrop }) => {
         accept="image/*"
         className="hidden"
       />
-      {isDragging ? (
-        <p>Drop the files here...</p>
-      ) : (
-        <p>Drag and drop files here, or click to select files</p>
-      )}
-
-      <div className="w-full bg-gray-200 opacity-65 rounded-lg "></div>
+      
+      <div className="flex flex-col items-center space-y-2">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400/20 to-purple-400/20 flex items-center justify-center border border-white/20">
+          <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        
+        {isDragging ? (
+          <div className="text-center">
+            <p className="text-sm font-semibold text-blue-400">Drop your texture here</p>
+            <p className="text-xs text-white/60 mt-1">Release to upload</p>
+          </div>
+        ) : (
+          <div className="text-center">
+            <p className="text-sm font-semibold text-white/90">Upload Texture</p>
+            <p className="text-xs text-white/60 mt-1">
+              Drag and drop an image file, or click to browse
+            </p>
+            <p className="text-xs text-white/40 mt-2">
+              Supports: JPG, PNG, GIF, WebP
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

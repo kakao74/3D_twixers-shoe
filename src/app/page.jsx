@@ -33,7 +33,6 @@ export default function Home() {
     yPos: 0.05,
     xRotation: 0,
     yRotation: 0,
-    zRotation: 0,
     scale: 0.15,
     url: "",
   });
@@ -189,19 +188,19 @@ export default function Home() {
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
                   Texture Upload
                 </h2>
-                <div className="h-24">
+                <div className="h-72">
                   <DragDrop onDrop={handleDrop} />
                 </div>
               </div>
 
-              {/* Texture Controls - Ultra Compact with Z Rotation */}
+              {/* Texture Controls - Ultra Compact without Z Rotation */}
               <div className="glass-card p-3 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
                 <h2 className="text-sm font-semibold mb-2 text-green-400 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
                   Texture Controls
                 </h2>
                 <div className="flex-1 space-y-2 flex flex-col justify-center">
-                  {["xPos", "yPos", "xRotation", "yRotation", "zRotation", "scale"].map(
+                  {["xPos", "yPos", "xRotation", "yRotation", "scale"].map(
                     (slider, index) => (
                       <Slider
                         key={index}

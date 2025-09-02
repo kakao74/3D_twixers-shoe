@@ -57,7 +57,6 @@ const Slider = ({ text, value, setValue }) => {
       yPos: "Y Position", 
       xRot: "X Rotation",
       yRot: "Y Rotation",
-      zRot: "Z Rotation",
       scal: "Scale"
     };
     return labels[text] || text;
